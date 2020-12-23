@@ -4,7 +4,7 @@ S_FILES=dict.cc
 EXEC=$(B_DIR)/dictcc
 
 CC=g++
-C_FLAGS=--std=c++20 -O2
+C_FLAGS=--std=c++17 -O2
 L_FLAGS=-lcurl
 
 all: build
