@@ -26,6 +26,10 @@ make
 
 Are any features missing? If so, just [ask for it in an Issue!](https://github.com/lquenti/dict.cc/issues).
 
+## ❓❓❓ Why would you use C++ out of all great languages ❓❓❓
+
+Solely for the joke of naming it `dict.cc`. I don't even like C++ at all.
+
 ## 📝 License
 
 MIT 2020 Lars Quentin
