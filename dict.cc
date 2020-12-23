@@ -6,7 +6,9 @@
 #include<regex>
 
 #include<curl/curl.h>
+#include"libfort_single_header.hpp"
 
+const std::string USAGE = "Usage:\n dictcc <WORD_TO_SEARCH_FOR>";
 const std::string BASE_STRING = "https://www.dict.cc/?s=";
 const std::regex EXTRACT_REGEX("\"(.*?)\",?");
 
@@ -14,8 +16,8 @@ static size_t WriteCallback(void *contents,
 			    size_t size,
 			    size_t nmemb,
 			    void *userp) {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
+	((std::string*)userp)->append((char*)contents, size * nmemb);
+	return size * nmemb;
 }
 
 static std::optional<std::string> DownloadHTML(std::string searchTerm) {
@@ -57,7 +59,7 @@ static std::vector<std::string> extractLanguage(const std::string l) {
 }
 
 static std::vector<std::pair<std::string, std::string>> extractPairs(
-						const std::string html) {
+								     const std::string html) {
 	std::istringstream stream(html);
 
 	// We look for the following lines
@@ -82,12 +84,21 @@ static std::vector<std::pair<std::string, std::string>> extractPairs(
 
 
 int main(int argc, char **argv) {
-	auto const htmlOptional = DownloadHTML("test");
-	if (!htmlOptional.has_value()) return 1;
+	if (argc == 1) {
+		std::cerr << USAGE << std::endl;
+		return 1;
+	}
+	auto const htmlOptional = DownloadHTML(argv[1]);
+	if (!htmlOptional.has_value()) {
+		return 1;
+	}
 	auto const html = htmlOptional.value();
 	auto const pairs = extractPairs(html);
+	fort::char_table table;
+	table << fort::header << "English" << "Deutsch" << fort::endr;
 	for (auto p : pairs) {
-		std::cout << p.first << " : " << p.second << '\n';
+		table << p.first << p.second << fort::endr;
 	}
+	std::cout << table.to_string() << std::endl;
 	return 0;
 }
